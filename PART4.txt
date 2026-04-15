@@ -1,0 +1,131 @@
+PART 4 – Preparing the dataset and configuration for YOLOv5
+
+The purpose of Part 4 is to prepare all files and folders required for YOLOv5 training. At this stage, the model is not trained yet. The goal is to make sure that the dataset structure, class order, file naming, and dataset configuration are correct, so that training can be started immediately after Parts 1–3 are completed.
+
+In this project, two object classes are used:
+0 = screwdriver
+1 = wrench
+
+The class order must always remain the same in all files and labels.
+
+Main folders used in Part 4:
+- ~/YOLOv5
+- ~/YOLOv5/dataset/images/train
+- ~/YOLOv5/dataset/images/val
+- ~/YOLOv5/dataset/labels/train
+- ~/YOLOv5/dataset/labels/val
+- ~/YOLOv5/yolov5_data/custom_dataset.yaml
+- ~/YOLOv5/scripts/verify_dataset.py
+- ~/YOLOv5/docs/project_rules.md
+- ~/YOLOv5/docs/split_plan.md
+- ~/YOLOv5/docs/final_after_part3_checklist.md
+
+What must be prepared in Part 4:
+
+1. Confirm the selected classes
+The selected classes for this project are screwdriver and wrench.
+The class IDs must be fixed as:
+- 0 = screwdriver
+- 1 = wrench
+
+2. Prepare the dataset folder structure
+The dataset must follow the YOLOv5 structure:
+dataset/
+├── images/
+│   ├── train/
+│   └── val/
+└── labels/
+    ├── train/
+    └── val/
+
+Training images must be placed in dataset/images/train
+Validation images must be placed in dataset/images/val
+Training label files must be placed in dataset/labels/train
+Validation label files must be placed in dataset/labels/val
+
+3. Use correct file formats
+All images must be saved as .jpg files.
+All annotation files must be saved as YOLO .txt label files.
+Each image must have a matching label file with the same filename.
+
+Examples:
+001.jpg ↔ 001.txt
+002.jpg ↔ 002.txt
+
+4. Use YOLO label format
+Each label file must use YOLO format:
+class_id x_center y_center width height
+
+The coordinates must be normalized.
+The class ID must match the selected class order.
+
+5. Prepare the dataset split
+The dataset must be divided into:
+- 80% training data
+- 20% validation data
+
+For about 90 images, the planned split is:
+- 72 training images
+- 18 validation images
+
+The chosen split rule for this project is:
+- every 5th image goes to validation
+- all other images go to training
+
+6. Prepare the YOLOv5 dataset configuration file
+The file used for dataset configuration is:
+~/YOLOv5/yolov5_data/custom_dataset.yaml
+
+Its content is:
+
+path: ../dataset
+train: images/train
+val: images/val
+nc: 2
+names: ['screwdriver', 'wrench']
+
+This file must later be copied into the YOLOv5 framework folder before training.
+
+7. Check project rules and split instructions
+The following files must be used as reference during Part 4:
+- docs/project_rules.md
+- docs/split_plan.md
+- docs/final_after_part3_checklist.md
+
+These files explain:
+- the class order
+- file naming rules
+- image format
+- label format
+- dataset split rule
+- the order of actions after Parts 1–3
+
+8. Verify the dataset before training
+After the final images and labels are placed into the dataset folders, the dataset must be checked using:
+
+python scripts/verify_dataset.py
+
+This script is used to verify:
+- whether each image has a matching label file
+- whether there are missing labels
+- whether there are orphan label files
+- whether the train/val structure is correct
+
+What is already prepared in this project:
+- project folder structure
+- dataset folder structure
+- class order
+- custom_dataset.yaml
+- dataset rules
+- split plan
+- verification script
+- Part 4 instructions in the docs folder
+
+What will remain to do after Parts 1–3 are finished:
+- collect the final .jpg images
+- collect the final YOLO .txt labels
+- place them into train and val folders
+- run the verification script
+
+Summary:
+Part 4 is the stage where the dataset is organized and checked for YOLOv5 training. It includes preparing the dataset structure, confirming the class order, preparing the YAML configuration file, following the split plan, and verifying that all images and labels are matched correctly. After this is completed, the project is ready to move to Part 5, which is model training and testing.
