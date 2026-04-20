@@ -1,5 +1,5 @@
-path: ../dataset
+path: /home/vpalmberg/YOLOv5/part4_training_ready
 train: images/train
 val: images/val
 nc: 2
-names: ['screwdriver', 'wrench']
+names: ['Screwdriver', 'Wrench']

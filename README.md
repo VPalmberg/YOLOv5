@@ -1,46 +1,64 @@
-# YOLOv5 Tool Detection Project
+# YOLOv5 – OBJECT_MAIN Project
 
-This repository is prepared for a course project on object detection using YOLOv5.
-
-## Selected classes
+## Project Overview
+This project trains a YOLOv5 model to detect:
 - screwdriver
 - wrench
 
-## Current status
-Parts 1–3 are not finished yet.
-This repository is prepared in advance so that Parts 4–5 can be completed quickly later.
+All preparation steps (Parts 1–4) are assumed completed:
+1. Use case defined and theory written
+2. Images collected and organized in OBJECT_MAIN
+3. Annotated in YOLO format with OpenLabeling
+4. Dataset structure verified
 
-## Repository structure
-- `dataset/images/train` — training images
-- `dataset/images/val` — validation images
-- `dataset/labels/train` — YOLO labels for training images
-- `dataset/labels/val` — YOLO labels for validation images
-- `yolov5_data/custom_dataset.yaml` — YOLOv5 dataset configuration
-- `docs/report_draft.md` — report draft template
-- `docs/parts_and_tasks.md` — task division by parts
-- `docs/part4_checklist.md` — preparation checklist for Part 4
-- `docs/part5_checklist.md` — preparation checklist for Part 5
-- `scripts/verify_dataset.py` — quick dataset consistency checker
+---
 
-## Class IDs
-- 0 = screwdriver
-- 1 = wrench
+## Checking dataset preparation (Parts 1–4)
 
-## What to do when Parts 1–3 are finished
-1. Put training images into `dataset/images/train`
-2. Put validation images into `dataset/images/val`
-3. Put matching label files into `dataset/labels/train` and `dataset/labels/val`
-4. Check that every image has a matching `.txt` label file
-5. Clone YOLOv5 into a separate folder or next to this repository
-6. Copy `yolov5_data/custom_dataset.yaml` into the `yolov5/data` folder
-7. Run training
+### 1. Verify folder structure
+tree ~/objects_detector/OBJECT_MAIN -L 3
 
-## Example training command
-```bash
+### 2. Verify images and labels are empty
+ls -l ~/objects_detector/OBJECT_MAIN/dataset/images/train
+ls -l ~/objects_detector/OBJECT_MAIN/dataset/images/val
+ls -l ~/objects_detector/OBJECT_MAIN/dataset/labels/train
+ls -l ~/objects_detector/OBJECT_MAIN/dataset/labels/val
+
+### 3. Verify YAML file
+cat ~/objects_detector/OBJECT_MAIN/yolov5_data/custom_dataset.yaml
+
+### 4. Verify dataset consistency
+python ~/objects_detector/OBJECT_MAIN/scripts/verify_dataset.py
+
+### 5. Check project instructions
+cat ~/objects_detector/OBJECT_MAIN/docs/project_rules.md
+cat ~/objects_detector/OBJECT_MAIN/docs/split_plan.md
+
+---
+
+## Training and Testing YOLOv5 (Part 5)
+
+### 1. Activate YOLOv5 environment
+cd ~/yolov5
+source ~/yolov5_env/bin/activate
+
+### 2. Copy dataset YAML
+cp ~/objects_detector/OBJECT_MAIN/yolov5_data/custom_dataset.yaml ~/yolov5/data/custom_dataset.yaml
+
+### 3. Start training
 python train.py --img 640 --batch 16 --epochs 30 --data data/custom_dataset.yaml --weights yolov5s.pt --cache
-```
 
-## Example detection command
-```bash
-python detect.py --weights runs/train/exp/weights/best.pt --img 640 --conf 0.25 --source data/images
-```
+### 4. Resume training if needed
+python train.py --weights runs/train/exp/weights/last.pt --resume
+
+### 5. Run detection on validation images
+python detect.py --weights runs/train/exp/weights/best.pt --img 640 --conf 0.25 --source ~/objects_detector/OBJECT_MAIN/dataset/images/val
+
+### 6. Run detection on webcam (optional)
+python detect.py --weights runs/train/exp/weights/best.pt --source 0 --conf-thres 0.4 --img 640 --device 0
+
+### Notes
+- Image and label filenames must match exactly.
+- Use 80/20 split for train/val datasets.
+- Annotate images in YOLO format: `class_id x_center y_center width height`.
+- Ensure `class_list.txt` in OpenLabeling matches the classes (screwdriver, wrench).
